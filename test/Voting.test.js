@@ -1,4 +1,4 @@
-const { BN, ether } = require('@openzeppelin/test-helpers');
+const { BN, ether, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 const Voting = artifacts.require('Voting');
 
@@ -12,6 +12,23 @@ contract('Voting', function (accounts) {
     beforeEach(async function () {
         this.VotingInstance = await Voting.new({ from: owner });
     });
+
+    // ::::::::::::: MODIFIER ::::::::::::: //
+
+    it('vérifie si le modifier onlyVoters revert bien', async function () {
+        await expectRevert(this.VotingInstance.getVoter(voter1, {from:owner}), "You're not a voter");
+    });
+
+    // ::::::::::::: GETTERS ::::::::::::: //
+
+    it('vérifie si on récupère la bonne proposition avec getOneProposal', async function () {
+    });
+
+    it('vérifie si on récupère bien la bonne proposition depuis avec l\'id', async function () {
+    });
+
+
+    // ::::::::::::: REGISTRATION ::::::::::::: // 
 
     it('vérifie si un votant a été ajouté', async function () {
         const result = await this.VotingInstance.addVoter(voter1, {from:owner})
@@ -28,6 +45,123 @@ contract('Voting', function (accounts) {
 
         // expect(_voter1).to.equal(true);
     });
+
+    it('vérifie si on revert bien quand on tente d\'ajouter un votant en dehors de la phase d\'enregistrement des votants', async function () {
+    });
+
+    it("vérifie si on revert bien quand on tente d'ajouter un votant déjà ajouté", async function () {
+    });
+
+    it("vérifie si un event est envoyé lorqu'un votant a été ajouté", async function () {
+    });
+
+    // ::::::::::::: PROPOSAL ::::::::::::: // 
+
+    it("vérifie si on une propostion est bien ajouté", async function () {
+    });
+
+    it("vérifie si on revert bien quand on tente d'ajouter une propostion en dehors de la phase d'enregistrement des propositions", async function () {
+    });
+
+    it("vérifie si on revert bien quand une propostion ajoutée est vide", async function () {
+    });
+
+    it("vérifie si un event est envoyé lorqu'une proposition a été ajoutée", async function () {
+    });
+
+
+    // ::::::::::::: VOTE ::::::::::::: //
+
+    it("vérifie si un vote a bien été pris en compte", async function () {
+        
+    });
+
+    it("vérifie si on revert bien quand on tente de voter en dehors de la session de vote", async function () {
+    });
+
+    it("vérifie si on revert bien quand un votant tente de voter alors qu'il a déjà voté", async function () {
+    });
+
+    it("vérifie si on revert bien quand un votant tente de voter une proposition inexistante", async function () {
+    });
+
+    it("vérifie si un event est envoyé lorqu'un votant a voté", async function () {
+    });
+
+
+    // ::::::::::::: STATE ::::::::::::: //
+
+    it("vérifie si on passe bien au workflowStatus RegisteringVoters", async function () {
+        
+    });
+
+    it("vérifie si un event est envoyé lorqu'on passe au workflowStatus RegisteringVoters", async function () {
+    });
+
+    it("vérifie si on revert bien quand on tente de passer au workflowStatus RegisteringVoters depuis un status non autorisé", async function () {
+    });
+
+
+
+
+    it("vérifie si on passe bien au workflowStatus ProposalsRegistrationStarted", async function () {
+        
+    });
+
+    it("vérifie si un event est envoyé lorqu'on passe au workflowStatus ProposalsRegistrationStarted", async function () {
+    });
+
+    it("vérifie si on revert bien quand on tente de passer au workflowStatus ProposalsRegistrationStarted depuis un status non autorisé", async function () {
+    });
+
+
+
+
+
+    it("vérifie si on passe bien au workflowStatus ProposalsRegistrationEnded", async function () {
+        
+    });
+
+    it("vérifie si un event est envoyé lorqu'on passe au workflowStatus ProposalsRegistrationEnded", async function () {
+    });
+
+    it("vérifie si on revert bien quand on tente de passer au workflowStatus ProposalsRegistrationEnded depuis un status non autorisé", async function () {
+    });
+
+
+
+
+
+    it("vérifie si on passe bien au workflowStatus VotingSessionStarted", async function () {
+        
+    });
+
+    it("vérifie si un event est envoyé lorqu'on passe au workflowStatus VotingSessionStarted", async function () {
+    });
+
+    it("vérifie si on revert bien quand on tente de passer au workflowStatus VotingSessionStarted depuis un status non autorisé", async function () {
+    });
+
+
+    // ::::::::::::: TALLYVOTES ::::::::::::: //
+
+    it("vérifie si on revert bien quand on tente de compter les votes depuis un workflowStatus non autorisé", async function () {
+    });
+
+    it("vérifie si le comptage des votes enregistre bien l'id de la proposition vaiqueure", async function () {
+    });
+
+    it("vérifie si on passe bien au workflowStatus VotesTallied à la fin du décompte des votes", async function () {
+    });
+
+    it("vérifie si un event est envoyé à la fin du décompte des votes", async function () {
+    });
+
+
+
+
+
+
 
 
     // it('a un symbole', async function () {
