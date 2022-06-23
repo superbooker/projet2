@@ -8,14 +8,123 @@ contract('Voting', function (accounts) {
     const owner = accounts[0];
     const voter1 = accounts[1];
     const voter2 = accounts[2];
+    const nonVoter = accounts[2];
 
-    beforeEach(async function () {
-        this.VotingInstance = await Voting.new({ from: owner });
+    let VotingInstance;
+
+    // ::::::::::::: REGISTRATION ::::::::::::: // 
+    describe("Test de la fonction addVoter", function () {
+
+        beforeEach(async function () {
+            VotingInstance = await Voting.new({from:owner});
+        });
+
+        it('vérifie si un votant a été ajouté', async function () {
+            await VotingInstance.addVoter(voter1, {from:owner});
+
+            console.log("Votant1 est enregistré : " + (await VotingInstance.getVoter(voter1, {from:voter1})).isRegistered);
+
+            const _result = (await VotingInstance.getVoter(voter1, {from:voter1})).isRegistered
+
+            expect(_result).to.be.true;
+        });
+
+        it("vérifie si un event est envoyé lorqu'un votant a été ajouté", async function () {
+            const _resultOfAddVoter = await VotingInstance.addVoter(voter1, {from:owner});
+
+            expectEvent(_resultOfAddVoter, 'VoterRegistered', {voterAddress:voter1});
+        });
+
+        it('vérifie si on revert bien quand on tente d\'ajouter un votant en dehors de la phase d\'enregistrement des votants', async function () {
+            await VotingInstance.startProposalsRegistering({from:owner});
+
+            //On teste les 3 phases où on ne peut pas ajouter des propositons
+            await expectRevert(VotingInstance.addVoter(voter1, {from:owner}), "Voters registration is not open yet");
+
+            await VotingInstance.endProposalsRegistering({from:owner});
+        
+            await expectRevert(VotingInstance.addVoter(voter1, {from:owner}), "Voters registration is not open yet");
+
+            await VotingInstance.startVotingSession({from:owner});
+        
+            await expectRevert(VotingInstance.addVoter(voter1, {from:owner}), "Voters registration is not open yet");
+
+            await VotingInstance.endVotingSession({from:owner}); 
+            
+            await expectRevert(VotingInstance.addVoter(voter1, {from:owner}), "Voters registration is not open yet");
+        });
+
+        it("vérifie si on revert bien quand on tente d'ajouter un votant déjà ajouté", async function () {
+            await VotingInstance.addVoter(voter1, {from:owner});
+
+            await expectRevert(VotingInstance.addVoter(voter1, {from:owner}), "Already registered");
+        });
+
+        it("vérifie si on revert bien quand on tente d'ajouter un votant depuis une autre addresse que l'owner", async function () {
+            await expectRevert(VotingInstance.addVoter(voter1, {from:voter1}), "Ownable: caller is not the owner");
+        });
+
     });
+
+    // ::::::::::::: PROPOSAL ::::::::::::: // 
+    describe("Test de la fonction addProposal", function () {
+        beforeEach(async function () {
+            VotingInstance = await Voting.new({from:owner});
+            //On initialise le test par ajouter un votant1
+            await VotingInstance.addVoter(voter1, {from:owner});
+        });
+
+        it("vérifie si on une propostion est bien ajouté", async function () {
+            //On ouvre la phase d'enregistrement des propositions
+            await VotingInstance.startProposalsRegistering({from:owner});
+
+            await VotingInstance.addProposal("Proposal 1",{from:voter1});
+            await VotingInstance.addProposal("Proposal 2",{from:voter1});
+            await VotingInstance.addProposal("Proposal 3",{from:voter1});
+
+            const _result = (await VotingInstance.getOneProposal(2, {from:voter1}))
+
+            expect(_result.description).to.equal("Proposal 3");
+        });
+
+        it("vérifie si on revert bien quand on tente d'ajouter une propostion en dehors de la phase d'enregistrement des propositions", async function () {
+            //On teste les 3 phases où on ne peut pas ajouter des propositons
+            await expectRevert(VotingInstance.addProposal("Proposal1", {from:voter1}), "Proposals are not allowed yet");
+
+            await VotingInstance.startProposalsRegistering({from:owner});
+
+            await VotingInstance.endProposalsRegistering({from:owner});
+
+            await expectRevert(VotingInstance.addProposal("Proposal1", {from:voter1}), "Proposals are not allowed yet");
+
+            await VotingInstance.startVotingSession({from:owner});
+
+            await expectRevert(VotingInstance.addProposal("Proposal1", {from:voter1}), "Proposals are not allowed yet");
+
+            await VotingInstance.endVotingSession({from:owner});
+
+            await expectRevert(VotingInstance.addProposal("Proposal1", {from:voter1}), "Proposals are not allowed yet");
+        });
+
+        it("vérifie si on revert bien quand une propostion ajoutée est vide", async function () {
+        });
+
+        it("vérifie si un event est envoyé lorqu'une proposition a été ajoutée", async function () {
+        });
+
+        it("vérifie si on revert bien quand une propostion ajoutée par un non votant", async function () {
+        });
+    });
+    
+
+    // beforeEach(async function () {
+    //     VotingInstance = await Voting.new({ from: owner });
+    // });
+
 
     // ::::::::::::: MODIFIER ::::::::::::: //
 
-    it('vérifie si le modifier onlyVoters revert bien', async function () {
+    it('vérifie si le modifier onlyVoters revert bien si on appelle une fonction onlyVoters depuis une adresse non voter', async function () {
         await expectRevert(this.VotingInstance.getVoter(voter1, {from:owner}), "You're not a voter");
     });
 
@@ -26,49 +135,6 @@ contract('Voting', function (accounts) {
 
     it('vérifie si on récupère bien la bonne proposition depuis avec l\'id', async function () {
     });
-
-
-    // ::::::::::::: REGISTRATION ::::::::::::: // 
-
-    it('vérifie si un votant a été ajouté', async function () {
-        const result = await this.VotingInstance.addVoter(voter1, {from:owner})
-        console.log((await this.VotingInstance.getVoter(voter1, {from:voter1})).isRegistered);
-
-        expectEvent(result, 'VoterRegistered', {voterAddress:voter1});
-
-
-
-        // const _voter1 = (await this.VotingInstance.voters(voter1, {from:voter1})).isRegistered;
-        // console.log(_voter1);
-
-
-
-        // expect(_voter1).to.equal(true);
-    });
-
-    it('vérifie si on revert bien quand on tente d\'ajouter un votant en dehors de la phase d\'enregistrement des votants', async function () {
-    });
-
-    it("vérifie si on revert bien quand on tente d'ajouter un votant déjà ajouté", async function () {
-    });
-
-    it("vérifie si un event est envoyé lorqu'un votant a été ajouté", async function () {
-    });
-
-    // ::::::::::::: PROPOSAL ::::::::::::: // 
-
-    it("vérifie si on une propostion est bien ajouté", async function () {
-    });
-
-    it("vérifie si on revert bien quand on tente d'ajouter une propostion en dehors de la phase d'enregistrement des propositions", async function () {
-    });
-
-    it("vérifie si on revert bien quand une propostion ajoutée est vide", async function () {
-    });
-
-    it("vérifie si un event est envoyé lorqu'une proposition a été ajoutée", async function () {
-    });
-
 
     // ::::::::::::: VOTE ::::::::::::: //
 
@@ -159,7 +225,15 @@ contract('Voting', function (accounts) {
 
 
 
+    // await VotingInstance.startProposalsRegistering({from:owner});
 
+    // await VotingInstance.endProposalsRegistering({from:owner});
+
+
+    // await VotingInstance.startVotingSession({from:owner});
+
+
+    // await VotingInstance.endVotingSession({from:owner});
 
 
 
