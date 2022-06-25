@@ -17,7 +17,7 @@ contract('Voting', function (accounts) {
     const nonVoter = accounts[5];
 
     let VotingInstance;
-    let _workflowStatus;
+    let workflowStatus;
 
     //______________________________________________________________________________________________
     // ::::::::::::: REGISTRATION ::::::::::::: // 
@@ -359,8 +359,8 @@ contract('Voting', function (accounts) {
         });
 
         it("vérifie si la 1ere phase est bien RegisteringVoters", async function () {
-            _workflowStatus = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatus)).to.be.bignumber.equal(new BN(0));
+            workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(workflowStatus)).to.be.bignumber.equal(new BN(0));
         });
 
         it("vérifie si on revert bien quand on tente de passer à un statut interdit depuis RegisteringVoters", async function () {
@@ -378,8 +378,8 @@ contract('Voting', function (accounts) {
         });
 
         it("vérifie si on est bien au workflowStatus ProposalsRegistrationStarted", async function () {
-            _workflowStatus = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatus)).to.be.bignumber.equal(new BN(1));
+            workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(workflowStatus)).to.be.bignumber.equal(new BN(1));
         });
 
         it("vérifie si on revert bien quand on tente de passer à un statut interdit depuis ProposalsRegistrationStarted", async function () {
@@ -399,8 +399,8 @@ contract('Voting', function (accounts) {
 
 
         it("vérifie si on est bien au workflowStatus ProposalsRegistrationEnded", async function () {
-            _workflowStatus = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatus)).to.be.bignumber.equal(new BN(2));
+            workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(workflowStatus)).to.be.bignumber.equal(new BN(2));
         });
 
         it("vérifie si on revert bien quand on tente de passer à un statut interdit depuis ProposalsRegistrationEnded", async function () {
@@ -419,8 +419,8 @@ contract('Voting', function (accounts) {
 
 
         it("vérifie si on est bien au workflowStatus VotingSessionStarted", async function () {
-            _workflowStatus = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatus)).to.be.bignumber.equal(new BN(3));
+            workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(workflowStatus)).to.be.bignumber.equal(new BN(3));
         });
 
         it("vérifie si on revert bien quand on tente de passer à un statut interdit depuis VotingSessionStarted", async function () {
@@ -439,8 +439,8 @@ contract('Voting', function (accounts) {
 
 
         it("vérifie si on est bien au workflowStatus VotingSessionEnded", async function () {
-            _workflowStatus = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatus)).to.be.bignumber.equal(new BN(4));
+            workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(workflowStatus)).to.be.bignumber.equal(new BN(4));
         });
 
         it("vérifie si on revert bien quand on tente de passer à un statut interdit depuis VotingSessionEnded", async function () {
@@ -508,20 +508,20 @@ contract('Voting', function (accounts) {
 
         it("vérifie si on est bien au workflowStatus VotesTallied à la fin du décompte des votes", async function () {
             //On teste le statut avant la fermeture du vote
-            _workflowStatus = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatus)).to.be.bignumber.equal(new BN(3));
+            workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(workflowStatus)).to.be.bignumber.equal(new BN(3));
 
             await VotingInstance.endVotingSession({ from: owner });
 
             //On teste le statut apres la fermeture du vote
-            _workflowStatus = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatus)).to.be.bignumber.equal(new BN(4));
+            workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(workflowStatus)).to.be.bignumber.equal(new BN(4));
 
             await VotingInstance.tallyVotes({ from: owner });
 
             //On teste le statut apres le décompte
-            _workflowStatus = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatus)).to.be.bignumber.equal(new BN(5));
+            workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(workflowStatus)).to.be.bignumber.equal(new BN(5));
         });
     });
 
