@@ -14,7 +14,7 @@
 
 Le fichier Voting.sol est fourni lors de la correction du projet #1.
 
-Les tests ont été classé dans l'ordre d'apparition des fonctions du fichier Voting.sol.
+Les tests ont été classés dans l'ordre d'apparition des fonctions du fichier Voting.sol.
 
 <br /> 
 
