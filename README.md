@@ -17,6 +17,8 @@ Le fichier Voting.sol est fourni lors de la correction du projet #1.
 
 Les tests ont été classés dans l'ordre d'apparition des fonctions du fichier Voting.sol.
 
+Le fichier des tests se trouvent dans test/Voting.test.js
+
 <br /> 
 
 
