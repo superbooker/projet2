@@ -1,4 +1,4 @@
-const { BN, ether, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
+const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 const Voting = artifacts.require('Voting');
 
@@ -415,7 +415,7 @@ contract('Voting', function (accounts) {
         
             const _winningProposalID = await VotingInstance.winningProposalID();
     
-            //La proposition vainqueur devient la proposition 0
+            //La proposition vainqueur devient la proposition 0 car égalité avec la proposition 1 mais comme on prend le 1er du tbleau, c'est la proposition 0 qui l'emporte
             expect(new BN(_winningProposalID)).to.be.bignumber.equal(new BN(0));
         });
 
@@ -429,13 +429,17 @@ contract('Voting', function (accounts) {
         });
 
         it("vérifie si on passe bien au workflowStatus VotesTallied à la fin du décompte des votes", async function () {
-            const _workflowStatusBefore = await VotingInstance.workflowStatus();
-            expect(new BN(_workflowStatusBefore)).to.bignumber.equal(new BN(4));
+            let _workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(_workflowStatus)).to.bignumber.equal(new BN(3));
             
             await VotingInstance.endVotingSession({from:owner});
+
+            _workflowStatus = await VotingInstance.workflowStatus();
+            expect(new BN(_workflowStatus)).to.bignumber.equal(new BN(4));
+
             await VotingInstance.tallyVotes({from:owner});
 
-            const _workflowStatus = await VotingInstance.workflowStatus();
+            _workflowStatus = await VotingInstance.workflowStatus();
 
             expect(new BN(_workflowStatus)).to.bignumber.equal(new BN(5));
         });
