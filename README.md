@@ -106,7 +106,7 @@ Les tests ont été classé dans l'ordre d'apparition des fonctions du fichier V
 <br/>
 
 
-### 8. Test isolé de tallyVotes (1 tests)
+### 8. Test isolé de tallyVotes (1 test)
 - vérifie si on revert bien quand on tente de compter les votes depuis un workflowStatus non autorisé
 
 ## Comment lancer les tests
