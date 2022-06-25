@@ -2,9 +2,9 @@
 ## Table of Contents
 1. [Tests unitaires du projet 1 Voting](#tests-unitaires-du-projet-1-voting)
 2. [Nombre de tests](#nombre-de-tests)
-3. [Installation](#installation)
-4. [Collaboration](#collaboration)
-5. [FAQs](#faqs)
+3. [Contenu des tests](#contenu-des-tests)
+4. [Comment lancer les tests](#comment-lancer-les-tests)
+5. [Licence](#licence)
 
 -----
 <br /> 
@@ -18,7 +18,6 @@ Les tests ont été classé dans l'ordre d'apparition des fonctions du fichier V
 
 <br /> 
 
------
 
 ## Nombre de tests
 
@@ -27,18 +26,18 @@ Les tests ont été classé dans l'ordre d'apparition des fonctions du fichier V
 
 <br /> 
 
------
 
 ## Contenu des tests
 
-### 1. Test de la fonction addVoter
+### 1. Test de la fonction addVoter (5 tests)
 
 - vérifie si un votant a été ajouté
 - vérifie si un event est envoyé lorqu'un votant a été ajouté
 - vérifie si on revert bien quand on tente d'ajouter un votant en dehors de la phase d'enregistrement des votants
 - vérifie si on revert bien quand on tente d'ajouter un votant déjà ajouté
 - vérifie si on revert bien quand on tente d'ajouter un votant depuis une autre addresse que l'owner (16ms)
-Test de la fonction addProposal
+
+### 2. Test de la fonction addProposal (5 tests)
 - vérifie si on une propostion est bien ajouté
 - vérifie si un event est envoyé lorqu'une proposition a été ajoutée
 - vérifie si on revert bien quand une propostion ajoutée est vide
@@ -48,8 +47,8 @@ Test de la fonction addProposal
 <br/>
     
     
-### 2. Test des getters
-#### 2.1 Test de getVoter
+### 3. Test des getters (5 tests)
+#### 3.1 Test de getVoter (3 tests)
 - vérifie si on récupère le bon votant avec getVoter
 - vérifie si on récupère bien qu'une addresse n'est pas dans les votants
 - vérifie si le modifier onlyVoters revert bien si on appelle getVoter depuis une adresse non voter
@@ -57,13 +56,13 @@ Test de la fonction addProposal
 <br/>
 
 
-#### 2.2 Test de getOneProposal
+#### 3.2 Test de getOneProposal (2 tests)
 - vérifie si on récupère la bonne proposition avec getOneProposal
 - vérifie si le modifier onlyVoters revert bien si on appelle getOneProposal depuis une adresse non voter
 
 <br/>
 
-### 3. Test de setVote
+### 4. Test de setVote (5 tests)
 - vérifie si un vote a bien été pris en compte
 - vérifie si un event est envoyé lorqu'un votant a voté
 - vérifie si on revert bien quand un votant tente de voter alors qu'il a déjà voté
@@ -73,13 +72,13 @@ Test de la fonction addProposal
 <br/>
 
 
-### 4. Test isolé de setVote
+### 5. Test isolé de setVote (1 test)
 - vérifie si on revert bien quand on tente de voter en dehors de la session de vote
     
 <br/>
 
 
-### 5. Test des changements de statuts
+### 6. Test des changements de statuts (14 tests)
 - vérifie si la 1ere phase est bien RegisteringVoters
 - vérifie si on revert bien quand on tente de passer à un statut interdit depuis RegisteringVoters
 - vérifie si un event est envoyé lorqu'on passe au workflowStatus ProposalsRegistrationStarted
@@ -98,7 +97,7 @@ Test de la fonction addProposal
 <br/>
 
 
-### 6. Test de tallyVotes
+### 7. Test de tallyVotes (4 tests)
 - vérifie si le comptage des votes retourne bien l'id de la proposition vaiqueure
 - vérifie si le comptage des votes enregistre bien l'id de la proposition 0 qui est vaiqueure en cas d'égalité
 - vérifie si un event est envoyé au passage au statut VotesTallied
@@ -107,5 +106,26 @@ Test de la fonction addProposal
 <br/>
 
 
-### 7. Test isolé de tallyVotes
+### 8. Test isolé de tallyVotes (1 tests)
 - vérifie si on revert bien quand on tente de compter les votes depuis un workflowStatus non autorisé
+
+## Comment lancer les tests
+Prérequis : 
+- Installer truffle : npm install -g truffle
+- Installer ganache : npm install -g ganache-cli
+
+
+Ouvrir un terminal :
+
+1. git clone https://github.com/superbooker/projet2.git
+2. cd projet2
+3. sudo npm install @openzeppelin/contracts --save
+4. sudo npm install @openzeppelin/test-helpers --save
+5. Lancer ganache : ganache
+6. truffle test test/Voting.test.js
+
+
+## Licence
+
+Le TP2 Alex YE est sous licence
+[GNU Lesser General Public License v3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html).
