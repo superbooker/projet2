@@ -4,8 +4,9 @@
 2. [Nombre de tests](#nombre-de-tests)
 3. [Contenu des tests](#contenu-des-tests)
 4. [Comment lancer les tests](#comment-lancer-les-tests)
-5. [Resultat eth-gas-reporter](#resultat-eth-gas-reporter)
-6. [Licence](#licence)
+5. [Resultat des tests](#resultat-des-tests)
+6. [Resultat eth-gas-reporter](#resultat-eth-gas-reporter)
+7. [Licence](#licence)
 
 -----
 <br /> 
